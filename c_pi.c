@@ -1,6 +1,8 @@
 #include <Python.h>
 #include <stdio.h>
 
+static PyObject *const_0_long;
+static PyObject *const_1_long;
 static PyObject *const_0_float;
 static PyObject *const_1_float;
 static PyObject *const_4_float;
@@ -77,8 +79,37 @@ static PyObject* compute_pi(PyObject* self, PyObject* iterations)
     return result;
 }
 
+static PyObject* sum_numbers(PyObject* self, PyObject* n)
+{
+    PyObject *tot = const_0_long;
+    Py_INCREF(tot);
+    PyObject *i = const_0_long;
+    Py_INCREF(i);
+    while(1) {
+        int cond = PyObject_RichCompareBool(i, n, Py_LT);
+        if (cond == -1)
+            return NULL;
+        if (!cond)
+            break;
+
+        PyObject *tmp = PyNumber_Add(tot, i);
+        Py_DECREF(tot);
+        tot = tmp;
+
+        PyObject *tmp2 = PyNumber_Add(i, const_1_long);
+        Py_DECREF(i);
+        i = tmp2;
+    }
+    Py_DECREF(i);
+    return tot;
+}
+
+#include "sum_numbers_opcode.c"
+
 static PyMethodDef Methods[] = {
     {"compute_pi", (PyCFunction)compute_pi, METH_O, ""},
+    {"sum_numbers", (PyCFunction)sum_numbers, METH_O, ""},
+    {"sum_numbers2", (PyCFunction)sum_numbers2, METH_O, ""},
     {NULL, NULL, 0, NULL}
 };
 
@@ -102,6 +133,10 @@ PyInit_c_pi(void)
     m = PyModule_Create(&moduledef);
     if (m == NULL)
         return NULL;
+    const_0_long = PyLong_FromLong(0);
+    CHECK(const_0_long);
+    const_1_long = PyLong_FromLong(1);
+    CHECK(const_1_long);
     const_0_float = PyFloat_FromDouble(0);
     CHECK(const_0_float);
     const_1_float = PyFloat_FromDouble(1);
