@@ -51,8 +51,8 @@ def bench_sum():
 
 if __name__ == '__main__':
     #bench_pi()
-    #bench_sum()
+    bench_sum()
 
-    dis.dis(compute_pi)
+    #dis.dis(compute_pi)
     #import pdb;pdb.set_trace()
     #print(c_pi.sum_numbers2(4))

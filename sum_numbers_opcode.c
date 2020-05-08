@@ -13,6 +13,7 @@
 
 #define STORE_FAST(oparg) {                     \
     PyObject *value = POP();                    \
+    Py_XDECREF(GETLOCAL(oparg));                \
     SETLOCAL(oparg, value);                     \
     }
 
@@ -71,13 +72,10 @@
 static PyObject* sum_numbers2(PyObject* self, PyObject* n)
 {
     const Py_ssize_t co_stacksize = 2;
-    const Py_ssize_t nvars = 3;
-
     PyObject *consts[] = {Py_None, const_0_long, const_1_long};
     PyObject *stack[co_stacksize];
     Py_ssize_t sp = 0;
-    PyObject *f_localsplus[nvars];
-    f_localsplus[0] = n;
+    PyObject *f_localsplus[3] = {n, NULL, NULL};
 
  l_0: LOAD_CONST              ( 1); /*  (0) */
  l_2: STORE_FAST              ( 1); /*  (tot) */
