@@ -22,10 +22,10 @@ def compute_pi(iterations):
 
 def run(name, fn, iterations):
     a = time.time()
-    pi = fn(iterations)
+    res = fn(iterations)
     b = time.time()
     t = b - a
-    print('%10s pi = %.6f    t = %.2f secs' % (name, pi, t))
+    print('%-10s %s = %.6f    t = %.2f secs' % (name, fn.__name__, res, t))
 
 N = 2000
 def main():
