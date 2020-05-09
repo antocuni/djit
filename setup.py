@@ -5,6 +5,9 @@ setup(
     ext_modules = [
         Extension('c_pi', ['c_pi.c'],
                   extra_compile_args=['-g', '-O3']
+        ),
+        Extension('_dumbjit', ['_dumbjit.c'],
+                  extra_compile_args=['-g', '-O3']
         )
     ],
 )

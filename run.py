@@ -4,6 +4,7 @@ import time
 import c_pi
 import cython_pi
 from dj import DJ
+import _dumbjit
 
 def compute_pi(iterations):
     delta = 1.0 / iterations
@@ -36,14 +37,18 @@ def run(name, fn, iterations):
     res = fn(iterations)
     b = time.time()
     t = b - a
-    print('%-10s %s = %.6f    t = %.2f secs' % (name, fn.__name__, res, t))
+    print('%-8s %-15s = %.6f    t = %.2f secs' % (name, fn.__name__, res, t))
 
 def bench_pi():
     N = 2000
     run('Python', compute_pi, N)
+    _dumbjit.enable()
+    _dumbjit.jit(compute_pi)
+    run('DJ', compute_pi, N)
     #run('Cython', cython_pi.compute_pi, N)
     run('C', c_pi.compute_pi, N)
     run('C', c_pi.compute_pi2, N)
+
 
 def bench_sum():
     N = 10000000
@@ -53,7 +58,7 @@ def bench_sum():
 
 if __name__ == '__main__':
     bench_pi()
+    print()
     #bench_sum()
-
     #DJ.compile(sum_numbers)
     #DJ.compile(compute_pi)
