@@ -52,6 +52,6 @@ def bench_sum():
 
 if __name__ == '__main__':
     #bench_pi()
-    #bench_sum()
+    bench_sum()
 
-    DJ.compile(sum_numbers)
+    #DJ.compile(sum_numbers)
