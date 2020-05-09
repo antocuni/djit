@@ -1,6 +1,8 @@
 #include <Python.h>
 #include <stdio.h>
 
+#include "opcodes.h"
+
 static PyObject *const_0_long;
 static PyObject *const_1_long;
 static PyObject *const_0_float;
