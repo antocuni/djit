@@ -3,6 +3,7 @@ import sys
 import time
 import c_pi
 import cython_pi
+from dj import DJ
 
 def compute_pi(iterations):
     delta = 1.0 / iterations
@@ -51,8 +52,6 @@ def bench_sum():
 
 if __name__ == '__main__':
     #bench_pi()
-    bench_sum()
+    #bench_sum()
 
-    #dis.dis(compute_pi)
-    #import pdb;pdb.set_trace()
-    #print(c_pi.sum_numbers2(4))
+    DJ.compile(sum_numbers)
