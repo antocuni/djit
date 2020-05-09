@@ -13,7 +13,7 @@ static PyObject* sum_numbers2(PyObject* self, PyObject* n)
  l_8:
     LOAD_FAST               ( 2); /*  (i) */
     LOAD_FAST               ( 0); /*  (n) */
-    COMPARE_OP_LT();
+    COMPARE_OP(0);
     POP_JUMP_IF_FALSE       (l_34);
     LOAD_FAST               ( 1); /*  (tot) */
     LOAD_FAST               ( 2); /*  (i) */

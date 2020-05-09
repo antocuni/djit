@@ -1,3 +1,60 @@
+enum cmp_op {PyCmp_LT=Py_LT, PyCmp_LE=Py_LE, PyCmp_EQ=Py_EQ, PyCmp_NE=Py_NE,
+                PyCmp_GT=Py_GT, PyCmp_GE=Py_GE, PyCmp_IN, PyCmp_NOT_IN,
+                PyCmp_IS, PyCmp_IS_NOT, PyCmp_EXC_MATCH, PyCmp_BAD};
+
+static PyObject *
+cmp_outcome(int op, PyObject *v, PyObject *w)
+{
+    int res = 0;
+    switch (op) {
+    case PyCmp_IS:
+        res = (v == w);
+        break;
+    case PyCmp_IS_NOT:
+        res = (v != w);
+        break;
+    case PyCmp_IN:
+        res = PySequence_Contains(w, v);
+        if (res < 0)
+            return NULL;
+        break;
+    case PyCmp_NOT_IN:
+        res = PySequence_Contains(w, v);
+        if (res < 0)
+            return NULL;
+        res = !res;
+        break;
+    case PyCmp_EXC_MATCH:
+        if (PyTuple_Check(w)) {
+            Py_ssize_t i, length;
+            length = PyTuple_Size(w);
+            for (i = 0; i < length; i += 1) {
+                PyObject *exc = PyTuple_GET_ITEM(w, i);
+                if (!PyExceptionClass_Check(exc)) {
+                    /* _PyErr_SetString(tstate, PyExc_TypeError, */
+                    /*                  CANNOT_CATCH_MSG); */
+                    return NULL;
+                }
+            }
+        }
+        else {
+            if (!PyExceptionClass_Check(w)) {
+                /* _PyErr_SetString(tstate, PyExc_TypeError, */
+                /*                  CANNOT_CATCH_MSG); */
+                return NULL;
+            }
+        }
+        res = PyErr_GivenExceptionMatches(v, w);
+        break;
+    default:
+        return PyObject_RichCompare(v, w, op);
+    }
+    v = res ? Py_True : Py_False;
+    Py_INCREF(v);
+    return v;
+}
+
+
 #define PUSH(x) (stack[sp++] = x)
 #define POP() (stack[--sp])
 
@@ -40,10 +97,10 @@
         return NULL;                                                    \
     }
 
-#define COMPARE_OP_LT() {                                               \
+#define COMPARE_OP(oparg) {                                             \
     PyObject *right = POP();                                            \
     PyObject *left = POP();                                             \
-    PyObject *res = PyObject_RichCompare(left, right, Py_LT);           \
+    PyObject *res = cmp_outcome(oparg, left, right);                    \
     Py_DECREF(left);                                                    \
     Py_DECREF(right);                                                   \
     PUSH(res);                                                          \
