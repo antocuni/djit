@@ -107,9 +107,11 @@ static PyObject* sum_numbers(PyObject* self, PyObject* n)
 }
 
 #include "sum_numbers_opcode.c"
+#include "compute_pi_opcode.c"
 
 static PyMethodDef Methods[] = {
     {"compute_pi", (PyCFunction)compute_pi, METH_O, ""},
+    {"compute_pi2", (PyCFunction)compute_pi2, METH_O, ""},
     {"sum_numbers", (PyCFunction)sum_numbers, METH_O, ""},
     {"sum_numbers2", (PyCFunction)sum_numbers2, METH_O, ""},
     {NULL, NULL, 0, NULL}

@@ -9,18 +9,18 @@ def compute_pi(iterations):
     delta = 1.0 / iterations
     inside = 0.0
     x = 0.0
-    while x < 1:
+    while x < 1.0:
         ## print()
         ## print('x =', x)
         y = 0.0
-        while y < 1:
+        while y < 1.0:
             ## print('  y = ', y)
-            if x*x + y*y < 1:
-                inside = inside + 1
+            if x*x + y*y < 1.0:
+                inside = inside + 1.0
             y = y + delta
         x = x + delta
     total = iterations * iterations
-    return inside / total * 4
+    return inside / total * 4.0
 
 def sum_numbers(n):
     tot = 0
@@ -41,8 +41,9 @@ def run(name, fn, iterations):
 def bench_pi():
     N = 2000
     run('Python', compute_pi, N)
-    run('Cython', cython_pi.compute_pi, N)
+    #run('Cython', cython_pi.compute_pi, N)
     run('C', c_pi.compute_pi, N)
+    run('C', c_pi.compute_pi2, N)
 
 def bench_sum():
     N = 10000000
@@ -51,7 +52,8 @@ def bench_sum():
     run('C', c_pi.sum_numbers2, N)
 
 if __name__ == '__main__':
-    #bench_pi()
-    bench_sum()
+    bench_pi()
+    #bench_sum()
 
     #DJ.compile(sum_numbers)
+    #DJ.compile(compute_pi)
