@@ -126,3 +126,36 @@ cmp_outcome(int op, PyObject *v, PyObject *w)
     }
 
 #define JUMP_ABSOLUTE(target) { goto target; }
+
+#define BINARY_TRUE_DIVIDE() {                                          \
+    PyObject *divisor = POP();                                          \
+    PyObject *dividend = POP();                                         \
+    PyObject *quotient = PyNumber_TrueDivide(dividend, divisor);        \
+    Py_DECREF(dividend);                                                \
+    Py_DECREF(divisor);                                                 \
+    PUSH(quotient);                                                     \
+    if (quotient == NULL)                                               \
+        return NULL;                                                    \
+    }
+
+#define BINARY_MULTIPLY() {                                         \
+    PyObject *right = POP();                                        \
+    PyObject *left = POP();                                         \
+    PyObject *res = PyNumber_Multiply(left, right);                 \
+    Py_DECREF(left);                                                \
+    Py_DECREF(right);                                               \
+    PUSH(res);                                                      \
+    if (res == NULL)                                                \
+        return NULL;                                                \
+    }
+
+#define BINARY_ADD() {                                              \
+    PyObject *right = POP();                                        \
+    PyObject *left = POP();                                         \
+    PyObject *res = PyNumber_Add(left, right);                      \
+    Py_DECREF(left);                                                \
+    Py_DECREF(right);                                               \
+    PUSH(res);                                                      \
+    if (res == NULL)                                                \
+        return NULL;                                                \
+    }
